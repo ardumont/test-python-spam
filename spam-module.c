@@ -1,6 +1,22 @@
 #include <Python.h>
 
 static PyObject *SpamError;
+static PyObject * spam_system(PyObject *self, PyObject *args);
+
+static PyMethodDef SpamMethods[] = {
+    {"system",  spam_system, METH_VARARGS,
+     "Execute a shell command."},
+    {NULL, NULL, 0, NULL}        /* Sentinel */
+};
+
+static struct PyModuleDef spammodule = {
+    PyModuleDef_HEAD_INIT,
+    "spam",   /* name of module */
+    NULL, /* module documentation, may be NULL */
+    -1,       /* size of per-interpreter state of the module,
+                 or -1 if the module keeps state in global variables. */
+    SpamMethods
+};
 
 // import instruction of the python module calls the following function
 PyMODINIT_FUNC
@@ -33,21 +49,6 @@ spam_system(PyObject *self, PyObject *args)
     }
     return PyLong_FromLong(sts);
 }
-
-static PyMethodDef SpamMethods[] = {
-    {"system",  spam_system, METH_VARARGS,
-     "Execute a shell command."},
-    {NULL, NULL, 0, NULL}        /* Sentinel */
-};
-
-static struct PyModuleDef spammodule = {
-    PyModuleDef_HEAD_INIT,
-    "spam",   /* name of module */
-    spam_doc, /* module documentation, may be NULL */
-    -1,       /* size of per-interpreter state of the module,
-                 or -1 if the module keeps state in global variables. */
-    SpamMethods
-};
 
 int
 main(int argc, char *argv[])
